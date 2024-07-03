@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Paper, TextField } from "@mui/material";
-import logo from '../../../assets/tatuaje.png'
+import logo from '../../assets/tatuaje.png'
 export default function Login() {
 
     return ( 
