@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "../components/access/Login";
-import Register from "../components/access/Register";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
