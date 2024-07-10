@@ -64,17 +64,6 @@ export default function Register() {
         return !!valor;
     }
 
-    // const sendData = () => {
-    //     consulta(
-    //       `/sisef`,
-    //       {},
-    //       "post",
-    //       (error, estado, resp) => {
-    //         console.log("Hola");
-    //       }
-    //     );
-    //   };
-
     const sendData = async () => {
         const resp = await authenticationService.auth.register(data);
         console.log(resp);

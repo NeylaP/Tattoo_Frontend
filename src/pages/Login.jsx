@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Avatar, Box, Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import authenticationService from "../services/index";
 
 export default function Login() {
 
@@ -46,12 +47,17 @@ export default function Login() {
       return;
     }
 
-    console.log("Datos válidos:", data);
+    sendData(data);
   };
 
   const hasError = (valor) => {
     return !!valor;
   }
+
+  const sendData = async (data) => {
+    const resp = await authenticationService.auth.login(data);
+    console.log(resp);
+}
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
