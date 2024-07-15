@@ -1,7 +1,6 @@
 export const api = "http://127.0.0.1:4000/api/";
 
 export const apiRequest = async (endpoint, method, payload = null) => {
-    await sleep(500);
     const apiUrl = `${api}${endpoint}`;
     let parametros = {
        headers: {
@@ -23,5 +22,3 @@ export const apiRequest = async (endpoint, method, payload = null) => {
        throw error;
     }
  };
-
- export const sleep = (t) => new Promise((r) => setTimeout(r, t));

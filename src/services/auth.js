@@ -41,6 +41,4 @@ const authService = {
    },
 };
 
-const sleep = (t) => new Promise((r) => setTimeout(r, t));
-
 export default authService;
