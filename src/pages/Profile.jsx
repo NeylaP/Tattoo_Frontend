@@ -1,21 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import authenticationService from "../services/index";
+import { apiUsers } from "../services/index";
 import { useNavigate } from 'react-router-dom';
+import { messageBasic } from "../utils/HelperMessages";
+import { useAuth } from '../context/auth-context/AuthContext';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-export default function Register() {
-
+export default function Profile() {
     const [data, setData] = useState({
-        email: '',
-        password: '',
-        passwordRepeat: '',
         first_name: '',
         last_name: '',
+        email: ''
     });
-
-    const [errores, setErrores] = useState({});
+    const [token, setToken] = useState('');
+    const loadServicesExecuted = useRef(false);
+    const { userData } = useAuth();
     const navigate = useNavigate();
+    const [errores, setErrores] = useState({});
+    const [load, setLoad] = useState(false);
+
+    useEffect(() => {
+        if (!userData) {
+            navigate("/login");
+            return;
+        }
+
+        const token = userData.token;
+        setToken(token);
+
+        const loadProfile = async () => {
+            try {
+                const resp = await apiUsers.user.getProfile(token);
+                setData(resp.data);
+            } catch (error) {
+                messageBasic("error", "Error cargando profile: " + error);
+            }
+        };
+
+        if (!loadServicesExecuted.current) {
+            loadProfile();
+            loadServicesExecuted.current = true;
+        }
+    }, [load]);
+
     const inputHandler = (e) => {
         setData({
             ...data,
@@ -51,32 +79,24 @@ export default function Register() {
             return;
         }
 
-        if (data.password !== data.passwordRepeat) {
-            setErrores((prevErrores) => ({
-                ...prevErrores,
-                passwordRepeat: "Las contraseñas no coinciden"
-            }));
-            return;
-        }
-       sendData();
+        sendData(data);
     };
 
-    const hasError = (valor) => {
-        return !!valor;
-    }
-
     const sendData = async () => {
-        const resp = await authenticationService.auth.register(data);
-        if (resp.success){
+        const resp = await apiUsers.user.updateProfile(token, data);
+        if (resp.success) {
             messageBasic(
                 "success",
-                'Register Successfull',
+                resp.message,
                 "center",
                 false,
                 1600
-              );
-              navigate('/login');
+            );
+            setLoad(!load);
         }
+    }
+    const hasError = (valor) => {
+        return !!valor;
     }
 
     return (
@@ -91,10 +111,10 @@ export default function Register() {
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                        <AccountCircleIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign up
+                        Profile
                     </Typography>
                     <Box noValidate sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
@@ -140,35 +160,6 @@ export default function Register() {
                                     helperText={errores.email}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                    value={data.password}
-                                    onChange={inputHandler}
-                                    error={hasError(errores.password)}
-                                    helperText={errores.password}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="passwordRepeat"
-                                    label="Repeat password"
-                                    type="password"
-                                    id="passwordRepeat"
-                                    value={data.passwordRepeat}
-                                    onChange={inputHandler}
-                                    error={hasError(errores.passwordRepeat)}
-                                    helperText={errores.passwordRepeat}
-                                />
-                            </Grid>
                         </Grid>
                         <Button
                             type="submit"
@@ -177,7 +168,7 @@ export default function Register() {
                             sx={{ mt: 3, mb: 2 }}
                             onClick={validateData}
                         >
-                            Sign Up
+                            Update Profile
                         </Button>
                     </Box>
                 </Box>

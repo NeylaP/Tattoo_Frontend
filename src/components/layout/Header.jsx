@@ -18,12 +18,15 @@ import { useAuth } from '../../context/auth-context/AuthContext';
 const pages = ['Servicios', 'Artistas'];
 const settings = ['Profile', 'Logout'];
 const conditionalPages = ['Citas'];
+const conditionalPagesAdmin = ['Admin'];
 
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { isLoggedIn, logout } = useAuth();
+  const { userData } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = userData?.decoded.userRoleName === 'Super Admin'
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -42,6 +45,12 @@ export default function Header() {
 
   const handleLogout = () => {
     logout();
+    handleCloseUserMenu();
+    navigate('/login');
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
     handleCloseUserMenu();
   };
 
@@ -74,7 +83,6 @@ export default function Header() {
             LOGO
           </Typography>
 
-          {/* Menú de navegación responsive */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -123,10 +131,19 @@ export default function Header() {
                     <Typography>{page}</Typography>
                   </MenuItem>
                 ))}
+                {isAdmin &&
+              conditionalPagesAdmin.map((page) => (
+                <MenuItem
+                    key={page}
+                    onClick={() => handleMenuItemClick(page)}
+                    sx={{ textAlign: 'center' }}
+                  >
+                    <Typography>{page}</Typography>
+                  </MenuItem>
+              ))}
             </Menu>
           </Box>
 
-          {/* Menú de navegación normal */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -151,9 +168,20 @@ export default function Header() {
                   {page}
                 </Button>
               ))}
+              {isAdmin &&
+              conditionalPagesAdmin.map((page) => (
+                <Button
+                  key={page}
+                  component={Link}
+                  to={`/${page.toLowerCase()}`}
+                  onClick={handleCloseNavMenu}
+                  sx={{ mx: 1, color: 'white' }}
+                >
+                  {page}
+                </Button>
+              ))}
           </Box>
 
-          {/* Menú de usuario */}
           {isLoggedIn ? (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Tooltip title="Open settings">
@@ -179,7 +207,7 @@ export default function Header() {
                 {settings.map((setting) => (
                   <MenuItem
                     key={setting}
-                    onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}
+                    onClick={setting === 'Logout' ? handleLogout : (setting === 'Profile') ? handleProfile : handleCloseUserMenu}
                     sx={{ textAlign: 'center' }}
                   >
                     <Typography>{setting}</Typography>

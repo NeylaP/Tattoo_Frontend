@@ -8,10 +8,11 @@ import Footer from "../components/layout/Footer";
 import Box from '@mui/material/Box';
 import Servicios from "../pages/Servicios";
 import Artistas from "../pages/Artistas";
+import Citas from "../pages/Citas";
+import Profile from "../pages/Profile";
+import Admin from "../pages/Admin";
 
 export default function AppRoutes() {
-   const userData = JSON.parse(localStorage.getItem("userData"));
-   const token = userData?.token;
    return (
       <Box display="flex" flexDirection="column" minHeight="95vh">
          <Header />
@@ -22,8 +23,9 @@ export default function AppRoutes() {
                <Route path="/register" element={<Register />} />
                <Route path="/servicios" element={<Servicios />} />
                <Route path="/artistas" element={<Artistas />} />
-               <Route path="/profile" element={<PrivateRoute Page={Register} />} />
-               {token && <Route path="/admin" element={<Register />} />}
+               <Route path="/profile" element={<Profile/>}/>
+               <Route path="/admin" element={<PrivateRoute Page={Admin} />} />
+               <Route path="/citas" element={<Citas/>} />
             </Routes>
          </Box>
          <Footer />

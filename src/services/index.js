@@ -1,4 +1,5 @@
 import authService from "./auth";
+import citasApi from "./cita";
 import serviceApi from "./services";
 import userApi from "./user";
 
@@ -12,6 +13,10 @@ export const apiUsers = {
 
 export const apiServices = {
    service: serviceApi,
+};
+
+export const apiCitas = {
+   cita: citasApi,
 };
 
 export default authenticationService;

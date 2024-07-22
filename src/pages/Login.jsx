@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/auth-context/AuthContext';
 import { messageBasic } from '../utils/HelperMessages';
 import { useNavigate } from 'react-router-dom';
+import useValidRoleRedirect from '../hooks/useValidRoleRedirect';
 
 export default function Login() {
   const [data, setData] = useState({
@@ -15,7 +16,7 @@ export default function Login() {
   const { login } = useAuth();
   const [errores, setErrores] = useState({});
   const navigate = useNavigate();
-
+  const redirectUser = useValidRoleRedirect();
   const inputHandler = (e) => {
     setData({
       ...data,
@@ -63,12 +64,6 @@ export default function Login() {
     const { resp } = respToken;
     if (resp) {
       if (resp.success) {
-        const decoded = jwtDecode(resp.token)
-        const userData = {
-          token: resp.token,
-          decoded: decoded
-        }
-        login(userData)
         messageBasic(
           "success",
           resp.message,
@@ -76,7 +71,7 @@ export default function Login() {
           false,
           1600
         );
-        navigate('/');
+        redirectUser(resp.token);
       } else {
         messageBasic(
           "error",

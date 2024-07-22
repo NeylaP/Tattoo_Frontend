@@ -18,7 +18,7 @@ export const useAuthContext = () => {
     const login = (userWithToken) => {
         setUserData(userWithToken);
         setIsLoggedIn(true)
-        if (userWithToken.decoded.role === "ADMIN") {
+        if (userWithToken.decoded.role === "Super Admin") {
             setIsAdmin(true)
         }
         localStorage.setItem("userData", JSON.stringify(userWithToken));

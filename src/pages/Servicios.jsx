@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { apiServices } from "../services";
 import { messageBasic } from "../utils/HelperMessages";
-import { Box, Typography} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Cards from "../components/Cards";
 import tatuaje from "../assets/tatuaje.png";
 
@@ -39,15 +39,19 @@ export default function Services() {
                     Servicios
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {servicesAll.map(service => (
-                        <Box key={service.id} sx={{ m: 2 }}>
-                            <Cards
-                                image=''
-                                title={`${service.service_name}`}
-                                description={`${service.description}`}
-                            />
-                        </Box>
-                    ))}
+                    <Grid item xs={12} md={12}>
+                        {servicesAll.map(service => (
+                            <Box key={service.id} sx={{ m: 2 }}>
+                                <Grid item xs={6} md={6}>
+                                    <Cards
+                                        image=''
+                                        title={`${service.service_name}`}
+                                        description={`${service.description}`}
+                                    />
+                                </Grid>
+                            </Box>
+                        ))}
+                    </Grid>
                 </Box>
             </Box>
         </Box>
