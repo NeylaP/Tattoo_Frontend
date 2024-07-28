@@ -11,8 +11,9 @@ const useValidRoleRedirect = () => {
     const decoded = jwtDecode(token);
     const redireccion =
       decoded.userRoleName === 'Super Admin' ? '/admin' :
-      decoded.userRoleName === 'User' ? '/profile' :
-      null;
+        (decoded.userRoleName === 'User' || decoded.userRoleName === 'Manager' 
+        || decoded.userRoleName === 'Tattoo Artist') ? '/profile' :
+          null;
 
     if (redireccion === null) {
       messageBasic(

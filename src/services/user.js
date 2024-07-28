@@ -53,6 +53,26 @@ const userApi = {
       throw error;
     }
   },
+  rolesAll: async function (token) {
+    try {
+      const endpoint = `${BASE_URL}/all_roles`;
+      const method = 'GET';
+      const response = await apiRequest(endpoint, method, token);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+  editRole: async function (token, user, role_id) {
+    try {
+      const endpoint = `${BASE_URL}/${user}/${role_id}`;
+      const method = 'PUT';
+      const response = await apiRequest(endpoint, method, token, {});
+      return response;
+    } catch (error) {
+      throw 'Hola'+error;
+    }
+  },
 };
 
 export default userApi;
